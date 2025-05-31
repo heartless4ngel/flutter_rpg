@@ -45,7 +45,7 @@ ThemeData primaryTheme = ThemeData(
   ),
 
   // card theme
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: AppColors.secondaryColor.withValues(alpha: 0.5),
     surfaceTintColor: Colors.transparent,
     shape: const RoundedRectangleBorder(),
