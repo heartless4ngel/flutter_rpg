@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rpg/models/vocation.dart';
+import 'package:flutter_rpg/screens/create/vocation_card.dart';
 import 'package:flutter_rpg/shared/styled_button.dart';
 import 'package:flutter_rpg/theme.dart';
 import '../../shared/styled_text.dart';
@@ -12,7 +14,6 @@ class Create extends StatefulWidget {
 }
 
 class _CreateState extends State<Create> {
-
   final _nameController = TextEditingController();
   final _sloganController = TextEditingController();
 
@@ -23,20 +24,28 @@ class _CreateState extends State<Create> {
     super.dispose();
   }
 
+  //handling vocation selection
+  Vocation selectedVocation = Vocation.junkie;
+
+  void updateVocation(Vocation vocation) {
+    setState(() {
+      selectedVocation = vocation;
+    });
+  }
+
   //submit handler
   void handleSubmit() {
-    if(_nameController.text.trim().isEmpty){
+    if (_nameController.text.trim().isEmpty) {
       print("name must not be empty");
       return;
     }
-    if(_sloganController.text.trim().isEmpty){
+    if (_sloganController.text.trim().isEmpty) {
       print("slogan must not be empty");
       return;
     }
     print(_nameController.text);
     print(_sloganController.text);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,48 +54,83 @@ class _CreateState extends State<Create> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-          child: Column(
-            children: [
-              //welcome message
-              Center(child: Icon(Icons.code, color: AppColors.primaryColor)),
-              Center(child: StyledHeading("Welcome, new player.")),
-              Center(
-                child: StyledText("Create a name & slogan for your character."),
-              ),
-              SizedBox(height: 30),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                //welcome message
+                Center(child: Icon(Icons.code, color: AppColors.primaryColor)),
+                Center(child: StyledHeading("Welcome, new player.")),
+                Center(
+                  child: StyledText(
+                    "Create a name & slogan for your character.",
+                  ),
+                ),
+                SizedBox(height: 30),
 
-              //input for name and slogan
-              TextField(
-                controller: _nameController,
-                style: GoogleFonts.kanit(
-                  textStyle: Theme.of(context).textTheme.bodyMedium,
+                //input for name and slogan
+                TextField(
+                  controller: _nameController,
+                  style: GoogleFonts.kanit(
+                    textStyle: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  cursorColor: AppColors.textColor,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.person_2),
+                    label: StyledText("Character name"),
+                  ),
                 ),
-                cursorColor: AppColors.textColor,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person_2),
-                  label: StyledText("Character name"),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _sloganController,
+                  style: GoogleFonts.kanit(
+                    textStyle: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  cursorColor: AppColors.textColor,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.chat),
+                    label: StyledText("Character slogan"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _sloganController,
-                style: GoogleFonts.kanit(
-                  textStyle: Theme.of(context).textTheme.bodyMedium,
+                const SizedBox(height: 30),
+
+                //select vocation title
+                Center(child: Icon(Icons.code, color: AppColors.primaryColor)),
+                Center(child: StyledHeading("Choose a vocation")),
+                Center(
+                  child: StyledText("This determines your available skills."),
                 ),
-                cursorColor: AppColors.textColor,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.chat),
-                  label: StyledText("Character slogan"),
+                SizedBox(height: 30),
+
+                //vocation cards
+                VocationCard(
+                  vocation: Vocation.junkie,
+                  onTap: updateVocation,
+                  selected: selectedVocation == Vocation.junkie,
                 ),
-              ),
-              const SizedBox(height: 30),
-              Center(
-                child: StyledButton(
-                  onPressed: handleSubmit,
-                  child: const StyledHeading("Create Character"),
+                VocationCard(
+                  vocation: Vocation.ninja,
+                  onTap: updateVocation,
+                  selected: selectedVocation == Vocation.ninja,
                 ),
-              )
-            ],
+                VocationCard(
+                  vocation: Vocation.raider,
+                  onTap: updateVocation,
+                  selected: selectedVocation == Vocation.raider,
+                ),
+                VocationCard(
+                  vocation: Vocation.wizard,
+                  onTap: updateVocation,
+                  selected: selectedVocation == Vocation.wizard,
+                ),
+
+                Center(
+                  child: StyledButton(
+                    onPressed: handleSubmit,
+                    child: const StyledHeading("Create Character"),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
