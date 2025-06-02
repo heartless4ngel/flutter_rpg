@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rpg/screens/create/create.dart';
+import 'package:flutter_rpg/screens/create/create_screen.dart';
 import 'package:flutter_rpg/screens/home/character_card.dart';
+import 'package:flutter_rpg/services/character_store.dart';
 import 'package:flutter_rpg/shared/styled_button.dart';
 import 'package:flutter_rpg/shared/styled_text.dart';
-
-import '../../models/character.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,21 +13,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-
 class _HomeState extends State<Home> {
-
-  void openCreateScreen() async {
-    final newCharacter = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (ctx) => const Create()),
-    );
-
-    if (newCharacter != null && newCharacter is Character) {
-      setState(() {
-        characters.add(newCharacter);
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +25,24 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: characters.length,
-                  itemBuilder: (_, index) {
-                    return CharacterCard(characters[index]);
+                child: Consumer<CharacterStore>(
+                  builder: (context, value, child) {
+                    return ListView.builder(
+                      itemCount: value.characters.length,
+                      itemBuilder: (_, index) {
+                        return CharacterCard(value.characters[index]);
+                      },
+                    );
                   },
                 ),
               ),
               StyledButton(
-                onPressed: openCreateScreen,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => const CreateScreen()),
+                  );
+                },
                 child: const StyledHeading("Create new"),
               ),
             ],
