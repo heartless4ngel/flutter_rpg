@@ -39,7 +39,7 @@ class Character with Stats {
       "slogan": slogan,
       "isFav": _isFav,
       "vocation": vocation.toString(),
-      "skill": skills.map((s) => s.id).toList(),
+      "skills": skills.map((s) => s.id).toList(),
       "stats": statsAsMap,
       "points": points,
     };
